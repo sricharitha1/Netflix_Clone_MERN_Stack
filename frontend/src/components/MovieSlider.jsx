@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useContentStore } from "../store/content";
-import axios from "axios";
+import API from "../utils/axios"; // ✅ uses configured Axios instance
 import { Link } from "react-router-dom";
 import { SMALL_IMG_BASE_URL } from "../utils/constants";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -18,43 +18,50 @@ const MovieSlider = ({ category }) => {
 
 	useEffect(() => {
 		const getContent = async () => {
-			const res = await axios.get(`/api/v1/${contentType}/${category}`);
-			setContent(res.data.content);
+			try {
+				// ✅ dynamic API call based on type and category
+				const res = await API.get(`/${contentType}/${category}`);
+				setContent(res.data.content);
+			} catch (error) {
+				console.error("Error fetching slider content:", error);
+				setContent([]);
+			}
 		};
 
 		getContent();
 	}, [contentType, category]);
 
 	const scrollLeft = () => {
-		if (sliderRef.current) {
+		if (sliderRef.current)
 			sliderRef.current.scrollBy({ left: -sliderRef.current.offsetWidth, behavior: "smooth" });
-		}
 	};
+
 	const scrollRight = () => {
-		sliderRef.current.scrollBy({ left: sliderRef.current.offsetWidth, behavior: "smooth" });
+		if (sliderRef.current)
+			sliderRef.current.scrollBy({ left: sliderRef.current.offsetWidth, behavior: "smooth" });
 	};
 
 	return (
 		<div
-			className='bg-black text-white relative px-5 md:px-20'
+			className="bg-black text-white relative px-5 md:px-20"
 			onMouseEnter={() => setShowArrows(true)}
 			onMouseLeave={() => setShowArrows(false)}
 		>
-			<h2 className='mb-4 text-2xl font-bold'>
+			<h2 className="mb-4 text-2xl font-bold">
 				{formattedCategoryName} {formattedContentType}
 			</h2>
 
-			<div className='flex space-x-4 overflow-x-scroll scrollbar-hide' ref={sliderRef}>
+			<div className="flex space-x-4 overflow-x-scroll scrollbar-hide" ref={sliderRef}>
 				{content.map((item) => (
-					<Link to={`/watch/${item.id}`} className='min-w-[250px] relative group' key={item.id}>
-						<div className='rounded-lg overflow-hidden'>
+					<Link to={`/watch/${item.id}`} className="min-w-[250px] relative group" key={item.id}>
+						<div className="rounded-lg overflow-hidden">
 							<img
 								src={SMALL_IMG_BASE_URL + item.backdrop_path}
-								alt='Movie image'
-								className='transition-transform duration-300 ease-in-out group-hover:scale-125'
+								alt={item.title || item.name}
+								className="transition-transform duration-300 ease-in-out group-hover:scale-125"
 							/>
 						</div>
-						<p className='mt-2 text-center'>{item.title || item.name}</p>
+						<p className="mt-2 text-center">{item.title || item.name}</p>
 					</Link>
 				))}
 			</div>
@@ -62,18 +69,16 @@ const MovieSlider = ({ category }) => {
 			{showArrows && (
 				<>
 					<button
-						className='absolute top-1/2 -translate-y-1/2 left-5 md:left-24 flex items-center justify-center
-            size-12 rounded-full bg-black bg-opacity-50 hover:bg-opacity-75 text-white z-10
-            '
+						className="absolute top-1/2 -translate-y-1/2 left-5 md:left-24 flex items-center justify-center
+						size-12 rounded-full bg-black bg-opacity-50 hover:bg-opacity-75 text-white z-10"
 						onClick={scrollLeft}
 					>
 						<ChevronLeft size={24} />
 					</button>
 
 					<button
-						className='absolute top-1/2 -translate-y-1/2 right-5 md:right-24 flex items-center justify-center
-            size-12 rounded-full bg-black bg-opacity-50 hover:bg-opacity-75 text-white z-10
-            '
+						className="absolute top-1/2 -translate-y-1/2 right-5 md:right-24 flex items-center justify-center
+						size-12 rounded-full bg-black bg-opacity-50 hover:bg-opacity-75 text-white z-10"
 						onClick={scrollRight}
 					>
 						<ChevronRight size={24} />
@@ -83,4 +88,5 @@ const MovieSlider = ({ category }) => {
 		</div>
 	);
 };
+
 export default MovieSlider;

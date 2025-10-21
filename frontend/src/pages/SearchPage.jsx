@@ -3,14 +3,13 @@ import { useContentStore } from "../store/content";
 import Navbar from "../components/Navbar";
 import { Search } from "lucide-react";
 import toast from "react-hot-toast";
-import axios from "axios";
+import API from "../utils/axios"; // ✅ replaced axios
 import { ORIGINAL_IMG_BASE_URL } from "../utils/constants";
 import { Link } from "react-router-dom";
 
 const SearchPage = () => {
 	const [activeTab, setActiveTab] = useState("movie");
 	const [searchTerm, setSearchTerm] = useState("");
-
 	const [results, setResults] = useState([]);
 	const { setContentType } = useContentStore();
 
@@ -23,10 +22,10 @@ const SearchPage = () => {
 	const handleSearch = async (e) => {
 		e.preventDefault();
 		try {
-			const res = await axios.get(`/api/v1/search/${activeTab}/${searchTerm}`);
+			const res = await API.get(`/search/${activeTab}/${searchTerm}`); // ✅ using API
 			setResults(res.data.content);
 		} catch (error) {
-			if (error.response.status === 404) {
+			if (error.response?.status === 404) {
 				toast.error("Nothing found, make sure you are searching under the right category");
 			} else {
 				toast.error("An error occurred, please try again later");
@@ -39,30 +38,17 @@ const SearchPage = () => {
 			<Navbar />
 			<div className='container mx-auto px-4 py-8'>
 				<div className='flex justify-center gap-3 mb-4'>
-					<button
-						className={`py-2 px-4 rounded ${
-							activeTab === "movie" ? "bg-red-600" : "bg-gray-800"
-						} hover:bg-red-700`}
-						onClick={() => handleTabClick("movie")}
-					>
-						Movies
-					</button>
-					<button
-						className={`py-2 px-4 rounded ${
-							activeTab === "tv" ? "bg-red-600" : "bg-gray-800"
-						} hover:bg-red-700`}
-						onClick={() => handleTabClick("tv")}
-					>
-						TV Shows
-					</button>
-					<button
-						className={`py-2 px-4 rounded ${
-							activeTab === "person" ? "bg-red-600" : "bg-gray-800"
-						} hover:bg-red-700`}
-						onClick={() => handleTabClick("person")}
-					>
-						Person
-					</button>
+					{["movie", "tv", "person"].map((tab) => (
+						<button
+							key={tab}
+							className={`py-2 px-4 rounded ${
+								activeTab === tab ? "bg-red-600" : "bg-gray-800"
+							} hover:bg-red-700`}
+							onClick={() => handleTabClick(tab)}
+						>
+							{tab === "movie" ? "Movies" : tab === "tv" ? "TV Shows" : "Person"}
+						</button>
+					))}
 				</div>
 
 				<form className='flex gap-2 items-stretch mb-8 max-w-2xl mx-auto' onSubmit={handleSearch}>
@@ -116,4 +102,5 @@ const SearchPage = () => {
 		</div>
 	);
 };
+
 export default SearchPage;

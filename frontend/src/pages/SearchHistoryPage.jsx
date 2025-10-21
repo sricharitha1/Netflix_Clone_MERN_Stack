@@ -1,23 +1,14 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { SMALL_IMG_BASE_URL } from "../utils/constants";
 import { Trash } from "lucide-react";
 import toast from "react-hot-toast";
+import API from "../utils/axios"; // ✅ custom axios instance
 
 function formatDate(dateString) {
-	// Create a Date object from the input date string
 	const date = new Date(dateString);
-
 	const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-	// Extract the month, day, and year from the Date object
-	const month = monthNames[date.getUTCMonth()];
-	const day = date.getUTCDate();
-	const year = date.getUTCFullYear();
-
-	// Return the formatted date string
-	return `${month} ${day}, ${year}`;
+	return `${monthNames[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()}`;
 }
 
 const SearchHistoryPage = () => {
@@ -26,7 +17,7 @@ const SearchHistoryPage = () => {
 	useEffect(() => {
 		const getSearchHistory = async () => {
 			try {
-				const res = await axios.get(`/api/v1/search/history`);
+				const res = await API.get(`/search/history`); // ✅ using API
 				setSearchHistory(res.data.content);
 			} catch (error) {
 				setSearchHistory([]);
@@ -37,7 +28,7 @@ const SearchHistoryPage = () => {
 
 	const handleDelete = async (entry) => {
 		try {
-			await axios.delete(`/api/v1/search/history/${entry.id}`);
+			await API.delete(`/search/history/${entry.id}`); // ✅ using API
 			setSearchHistory(searchHistory.filter((item) => item.id !== entry.id));
 		} catch (error) {
 			toast.error("Failed to delete search item");
@@ -61,7 +52,6 @@ const SearchHistoryPage = () => {
 	return (
 		<div className='bg-black text-white min-h-screen'>
 			<Navbar />
-
 			<div className='max-w-6xl mx-auto px-4 py-8'>
 				<h1 className='text-3xl font-bold mb-8'>Search History</h1>
 				<div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3  gap-4'>

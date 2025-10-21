@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useContentStore } from "../store/content";
-import axios from "axios";
+import API from "../utils/axios"; // ✅ custom axios instance
 
 const useGetTrendingContent = () => {
 	const [trendingContent, setTrendingContent] = useState(null);
@@ -8,8 +8,14 @@ const useGetTrendingContent = () => {
 
 	useEffect(() => {
 		const getTrendingContent = async () => {
-			const res = await axios.get(`/api/v1/${contentType}/trending`);
-			setTrendingContent(res.data.content);
+			try {
+				// ✅ use API instead of axios, and remove /api/v1 prefix
+				const res = await API.get(`/${contentType}/trending`);
+				setTrendingContent(res.data.content);
+			} catch (error) {
+				console.error("Error fetching trending content:", error);
+				setTrendingContent([]);
+			}
 		};
 
 		getTrendingContent();
@@ -17,4 +23,5 @@ const useGetTrendingContent = () => {
 
 	return { trendingContent };
 };
+
 export default useGetTrendingContent;

@@ -12,6 +12,10 @@ import SearchPage from "./pages/SearchPage";
 import SearchHistoryPage from "./pages/SearchHistoryPage";
 import NotFoundPage from "./pages/404";
 
+
+
+
+
 function App() {
 	const { user, isCheckingAuth, authCheck } = useAuthStore();
 
