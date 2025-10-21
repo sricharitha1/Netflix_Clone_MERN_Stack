@@ -13,13 +13,12 @@ import { ENV_VARS } from "./config/envVars.js";
 import { connectDB } from "./config/db.js";
 import { protectRoute } from "./middleware/protectRoute.js";
 
+
 const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:5173",
-      "https://netflix-clone-mern-stack-t1n5.vercel.app/",
-    ],
+    origin: ["http://localhost:5173"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
