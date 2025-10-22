@@ -1,6 +1,7 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 import { create } from "zustand";
+console.log("BASE URL:", import.meta.env.VITE_API_BASE_URL);
 
 // ✅ Set backend API base URL and enable cookies
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
