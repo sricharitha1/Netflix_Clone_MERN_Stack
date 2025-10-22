@@ -15,16 +15,17 @@ import { protectRoute } from "./middleware/protectRoute.js";
 const app = express();
 
 // ✅ 1. Correct CORS placement (before routes)
-app.use(
-  cors({
-    origin: [
-      'http://localhost:5173',
-      'https://netflix-clone-mern-s-git-72065c-sri-charithas-projects-2f1b188a.vercel.app',
-    ],
-    credentials: true, // ✅ allows cookies to be sent
-     exposedHeaders: ["set-cookie"],
-  })
-);
+const cors = require("cors");
+
+app.use(cors({
+  origin: [
+    "http://localhost:5173", // local dev
+    "https://netflix-clone-mern-s-git-72065c-sri-charithas-projects-2f1b188a.vercel.app" // your deployed frontend
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true,
+}));
+
 
 const PORT = ENV_VARS.PORT;
 const __dirname = path.resolve();
