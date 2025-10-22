@@ -14,18 +14,15 @@ import { protectRoute } from "./middleware/protectRoute.js";
 
 const app = express();
 
-// ✅ 1. Correct CORS placement (before routes)
-const cors = require("cors");
-
+// ✅ 1. CORS configuration (keep only this version)
 app.use(cors({
   origin: [
     "http://localhost:5173", // local dev
-    "https://netflix-clone-mern-s-git-72065c-sri-charithas-projects-2f1b188a.vercel.app" // your deployed frontend
+    "https://netflix-clone-mern-s-git-72065c-sri-charithas-projects-2f1b188a.vercel.app" // Vercel frontend
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true,
 }));
-
 
 const PORT = ENV_VARS.PORT;
 const __dirname = path.resolve();
@@ -40,14 +37,13 @@ app.use("/api/v1/movie", protectRoute, movieRoutes);
 app.use("/api/v1/tv", protectRoute, tvRoutes);
 app.use("/api/v1/search", protectRoute, searchRoutes);
 
-// ✅ 4. Static frontend serving (only in production)
-//if (ENV_VARS.NODE_ENV === "production") {
-  //app.use(express.static(path.join(__dirname, "/frontend/dist")));
-
-  //app.get("*", (req, res) => {
-    //res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
- // });
-//}
+// ✅ 4. Static frontend serving (optional for full-stack deploy)
+// if (ENV_VARS.NODE_ENV === "production") {
+//   app.use(express.static(path.join(__dirname, "/frontend/dist")));
+//   app.get("*", (req, res) => {
+//     res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+//   });
+// }
 
 app.listen(PORT, () => {
   console.log("Server started at http://localhost:" + PORT);
