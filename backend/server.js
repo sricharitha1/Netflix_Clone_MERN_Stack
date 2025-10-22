@@ -22,6 +22,7 @@ app.use(
       "https://netflix-clone-mern-stack-lyart.vercel.app",
     ],
     credentials: true, // ✅ allows cookies to be sent
+     exposedHeaders: ["set-cookie"],
   })
 );
 
