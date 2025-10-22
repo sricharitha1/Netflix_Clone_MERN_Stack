@@ -18,8 +18,8 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
-      "https://netflix-clone-mern-stack-lyart.vercel.app",
+      'http://localhost:5173',
+      'https://netflix-clone-mern-s-git-72065c-sri-charithas-projects-2f1b188a.vercel.app',
     ],
     credentials: true, // ✅ allows cookies to be sent
      exposedHeaders: ["set-cookie"],
