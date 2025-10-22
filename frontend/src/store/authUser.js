@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { create } from "zustand";
 
 // ✅ Set backend API base URL and enable cookies
-axios.defaults.baseURL = "http://localhost:9000";
+axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 axios.defaults.withCredentials = true;
 
 export const useAuthStore = create((set) => ({
